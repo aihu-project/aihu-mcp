@@ -1,5 +1,11 @@
 # @aihu/mcp
 
+## Unreleased
+
+- Move the MCP server and compiler-backed cookbook into the standalone `aihu-mcp` repository.
+- Resolve `aihu-compile` exclusively through the published `@aihu/compiler` package.
+- Keep cookbook generation and validation self-contained in this repository.
+
 ## 0.2.0
 
 ### Minor Changes

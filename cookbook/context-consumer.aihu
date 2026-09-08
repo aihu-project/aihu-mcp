@@ -1,0 +1,38 @@
+<!-- @cookbook
+id: context-consumer
+type: container
+granularity: block
+description: consume() intrinsic — reads the 'theme' token provided by an ancestor context-provider.
+constructs: [consume, interpolation]
+packages: []
+concerns: [state]
+since: 0.5.0
+anti-patterns:
+  - "Do not resolve context in module scope — consume() resolves against the ancestor chain at setup time, not import time."
+related: [context-provider, theme-toggle]
+-->
+// context-consumer — consume(): reads theme from ancestor provider
+// Pairs with context-provider.aihu; `theme` is the consumed provided value.
+
+@state {
+  const theme = consume<string>('theme')
+}
+
+@template {
+  <div class={['consumer', theme]}>
+    <p class="theme-label">
+      Active theme: <strong>{theme}</strong>
+    </p>
+    <div class={['swatch', theme === 'dark' ? 'swatch-dark' : 'swatch-light']}></div>
+  </div>
+}
+
+@style {
+  .consumer { padding: 1rem; border-radius: 4px; transition: background 0.2s; }
+  .consumer.light { background: #fff; color: #111; }
+  .consumer.dark { background: #111; color: #f0f0f0; }
+  .theme-label { margin: 0 0 0.5rem; font-size: 0.9rem; }
+  .swatch { width: 2rem; height: 2rem; border-radius: 50%; border: 2px solid currentColor; }
+  .swatch-light { background: #fff; }
+  .swatch-dark { background: #111; }
+}

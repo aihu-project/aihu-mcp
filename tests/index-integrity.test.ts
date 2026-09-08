@@ -2,10 +2,10 @@
  * Integrity tests for the COMMITTED cookbook index — the artifact the
  * `aihu_example` MCP tool actually serves.
  *
- * These are the package-local companion to scripts/check-cookbook-index.ts
- * (which diffs the committed artifacts against a fresh corpus build). Here we
+ * These are the package-local companion to scripts/build-cookbook-index.ts
+ * (which regenerates the committed artifacts from a fresh corpus build). Here we
  * assert invariants of the committed JSON itself, so `bun run test` in
- * packages/mcp catches a fossilized or hand-mangled index even when run in
+ * the MCP package catches a fossilized or hand-mangled index even when run in
  * isolation:
  *
  *  - every entry mirrors a real cookbook/ file (the pre-P0 fossil index had
@@ -22,7 +22,7 @@ import type { CookbookEntry } from '../src/cookbook.js'
 
 const here = dirname(fileURLToPath(import.meta.url))
 const indexPath = resolve(here, '../src/cookbook-index.json')
-const cookbookDir = resolve(here, '../../../cookbook')
+const cookbookDir = resolve(here, '../cookbook')
 
 const entries = JSON.parse(readFileSync(indexPath, 'utf-8')) as CookbookEntry[]
 

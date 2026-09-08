@@ -15,7 +15,7 @@ export interface CookbookEntry {
   description: string
   tags: string[]
   source: string
-  /** Recipe id — the filename stem (schema: packages/mcp/scripts/cookbook-lib.ts). */
+  /** Recipe id — the filename stem (schema: scripts/cookbook-lib.ts). */
   id?: string
   /** Component-type axis (display, form, list, container, async, …). */
   type?: string
@@ -51,7 +51,6 @@ function loadIndex(): CookbookEntry[] {
     ...(process.env.AIHU_COOKBOOK_PATH ? [resolve(process.env.AIHU_COOKBOOK_PATH)] : []),
     join(here, 'cookbook-index.json'),
     join(here, '..', 'src', 'cookbook-index.json'),
-    resolve('packages/mcp/src/cookbook-index.json'),
   ]
 
   for (const candidate of candidates) {

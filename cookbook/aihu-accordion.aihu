@@ -1,0 +1,62 @@
+<!-- @cookbook
+id: aihu-accordion
+type: container
+granularity: block
+description: Accordion — each/key over prop-provided items, show toggles the open panel, aria-expanded tracks state.
+constructs: [prop, state, action, each, key, show, group, on:click, interpolation]
+packages: []
+concerns: [state, a11y]
+since: 0.5.0
+anti-patterns:
+  - "Do not drive frequently-toggled panels with if= — show keeps DOM and internal state alive; if= tears down and rebuilds."
+related: [aihu-tabs, aihu-modal]
+-->
+// accordion — prop items (array) + action toggle, each over items, show for content
+
+@state {
+  const items = prop({
+    default: [
+        { id: '1', title: 'First item', content: 'Content for the first panel.' },
+        { id: '2', title: 'Second item', content: 'Content for the second panel.' },
+        { id: '3', title: 'Third item', content: 'Content for the third panel.' },
+      ],
+  })
+
+  let openId = state('')
+
+  const toggle = action((id: string) => {
+      openId = openId === id ? '' : id
+    })
+}
+
+@template {
+  <div class="accordion" role="list">
+    <group each={item of items} key={item.id}>
+      <div class="accordion-item" role="listitem">
+        <button
+          class={['accordion-header', openId === item.id && 'open']}
+          on:click={() => toggle(item.id)}
+          aria-expanded={openId === item.id}
+        >
+          <span>{item.title}</span>
+          <span class="chevron">{openId === item.id ? '▲' : '▼'}</span>
+        </button>
+        <div show={openId === item.id} class="accordion-body">
+          <p>{item.content}</p>
+        </div>
+      </div>
+    </group>
+  </div>
+}
+
+@style {
+  .accordion { border: 1px solid var(--border, #ccc); border-radius: 6px; overflow: hidden; max-width: 32rem; }
+  .accordion-item { border-bottom: 1px solid var(--border, #ccc); }
+  .accordion-item:last-child { border-bottom: none; }
+  .accordion-header { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: none; border: none; cursor: pointer; font-size: 1rem; text-align: left; }
+  .accordion-header.open { background: var(--accent-subtle, #eef); }
+  .chevron { font-size: 0.7rem; color: var(--muted, #888); }
+  .accordion-body { padding: 0.75rem 1rem; background: var(--panel-bg, #fafafa); }
+  .accordion-body p { margin: 0; }
+  [hidden] { display: none; }
+}

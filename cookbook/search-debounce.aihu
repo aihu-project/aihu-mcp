@@ -1,0 +1,72 @@
+<!-- @cookbook
+id: search-debounce
+type: list
+granularity: block
+description: Debounced search — bind:value feeds the query, effect() debounces 300ms into a second state, derived() filters results.
+constructs: [state, effect, derived, bind:value, each, key, if, elseif, group, interpolation]
+packages: []
+concerns: [state, events]
+since: 0.5.0
+playground: Search
+anti-patterns:
+  - "Do not debounce inside derived() — derivations must be pure; the timer lives in effect(), the settled value in its own state."
+related: [data-table, fetch-resource]
+-->
+// search-debounce — bind:value on input + effect() with 300ms debounce, derived results
+
+@state {
+  let query = state('')
+  let debouncedQuery = state('')
+  let _debounceTimer = null
+
+  effect(() => {
+    if (_debounceTimer !== null) clearTimeout(_debounceTimer)
+    _debounceTimer = setTimeout(() => {
+      debouncedQuery = query
+      _debounceTimer = null
+    }, 300) as unknown as number
+  })
+
+  const results = derived(() => {
+      if (!debouncedQuery.trim()) return []
+      const q = debouncedQuery.toLowerCase()
+      return [
+        'apple', 'apricot', 'banana', 'blueberry', 'cherry',
+        'grape', 'kiwi', 'lemon', 'mango', 'orange', 'peach', 'pear',
+      ].filter(item => item.includes(q))
+    })
+}
+
+@template {
+  <div class="search-box">
+    <label class="search-label">
+      Search fruits
+      <input
+        type="search"
+        class="search-input"
+        bind:value={query}
+        placeholder="Type to search…"
+        aria-label="Search fruits"
+      />
+    </label>
+    <group if={query && results.length === 0}>
+      <p class="no-results">No results for "<strong>{query}</strong>"</p>
+    </group><group elseif={results.length > 0}>
+      <ul class="result-list">
+        <group each={item of results} key={item}>
+          <li class="result-item">{item}</li>
+        </group>
+      </ul>
+    </group>
+  </div>
+}
+
+@style {
+  .search-box { max-width: 22rem; padding: 1rem; }
+  .search-label { display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.9rem; font-weight: 500; }
+  .search-input { padding: 0.5rem; border: 1px solid var(--border, #ccc); border-radius: 4px; font-size: 1rem; width: 100%; }
+  .no-results { color: var(--muted, #888); font-size: 0.9rem; margin-top: 0.5rem; }
+  .result-list { list-style: none; padding: 0; margin: 0.5rem 0 0; border: 1px solid var(--border, #ccc); border-radius: 4px; overflow: hidden; }
+  .result-item { padding: 0.4rem 0.75rem; border-bottom: 1px solid var(--border, #eee); font-size: 0.9rem; }
+  .result-item:last-child { border-bottom: none; }
+}

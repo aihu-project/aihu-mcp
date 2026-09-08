@@ -1,0 +1,69 @@
+<!-- @cookbook
+id: aihu-tabs
+type: container
+granularity: block
+description: Tabs — derived() computes the selected tab, each/key renders the tablist, onMount picks the initial tab.
+constructs: [prop, state, derived, action, onMount, each, key, if, else, group, on:click, interpolation]
+packages: []
+concerns: [state, a11y]
+since: 0.5.0
+playground: Tabs
+anti-patterns:
+  - "Do not recompute the active tab inline in the template — derived() memoizes the selection once for every read site."
+related: [aihu-accordion]
+-->
+// tabs — prop tabs + action selectTab, derived selected (active tab)
+
+@state {
+  const tabs = prop({
+    default: [
+        { id: 'overview', label: 'Overview', content: 'Overview panel content.' },
+        { id: 'details', label: 'Details', content: 'Details panel content.' },
+        { id: 'settings', label: 'Settings', content: 'Settings panel content.' },
+      ],
+  })
+
+  let activeId = state('')
+
+  const selected = derived(() => tabs.find(t => t.id === activeId) ?? tabs[0] ?? null)
+
+  onMount(() => {
+      if (tabs.length > 0) activeId = tabs[0].id
+    })
+
+  const selectTab = action((id) => { activeId = id })
+}
+
+@template {
+  <div class="tabs-component">
+    <div class="tab-list" role="tablist">
+      <group each={tab of tabs} key={tab.id}>
+        <button
+          role="tab"
+          class={['tab-btn', activeId === tab.id && 'active']}
+          aria-selected={activeId === tab.id}
+          on:click={() => selectTab(tab.id)}
+        >
+          {tab.label}
+        </button>
+      </group>
+    </div>
+    <div class="tab-panel" role="tabpanel">
+      <group if={selected}>
+        <p>{selected.content}</p>
+      </group><group else>
+        <p class="empty">No tab selected.</p>
+      </group>
+    </div>
+  </div>
+}
+
+@style {
+  .tabs-component { max-width: 32rem; border: 1px solid var(--border, #ccc); border-radius: 6px; overflow: hidden; }
+  .tab-list { display: flex; border-bottom: 1px solid var(--border, #ccc); background: var(--tab-bar-bg, #f5f5f5); }
+  .tab-btn { flex: 1; padding: 0.6rem 0.75rem; background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; font-size: 0.9rem; }
+  .tab-btn.active { border-bottom-color: var(--accent, #0066cc); color: var(--accent, #0066cc); font-weight: 600; }
+  .tab-panel { padding: 1rem; }
+  .tab-panel p { margin: 0; }
+  .empty { color: var(--muted, #888); font-style: italic; }
+}

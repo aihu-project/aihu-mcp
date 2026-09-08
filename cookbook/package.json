@@ -1,0 +1,12 @@
+{
+  "name": "@aihu/cookbook",
+  "version": "0.5.36",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "bun run harness.ts"
+  },
+  "dependencies": {
+    "@aihu/compiler": "^1.3.6"
+  }
+}

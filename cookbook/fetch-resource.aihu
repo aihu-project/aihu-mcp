@@ -1,0 +1,43 @@
+<!-- @cookbook
+id: fetch-resource
+type: async
+granularity: block
+description: resource() intrinsic — async fetch with loading/error/value states rendered through an if/elseif/else chain.
+constructs: [prop, resource, group, if, elseif, else, interpolation]
+packages: []
+concerns: [state]
+since: 0.5.0
+anti-patterns:
+  - "Do not hand-roll loading/error state() flags around fetch inside an effect — resource() owns the loading/error/value lifecycle."
+related: [agent-weather, search-debounce]
+-->
+// fetch-resource — resource() for async fetch with loading/error/data states
+
+@state {
+  const url = prop({ default: '/api/resource' })
+
+  const data = resource(async () => {
+      const res = await fetch(url)
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      return res.json()
+    })
+}
+
+@template {
+  <div class="fetch-resource">
+    <group if={data.loading}>
+      <p class="loading">Loading…</p>
+    </group><group elseif={data.error}>
+      <p class="error">Error: {data.error.message}</p>
+    </group><group else>
+      <pre class="result">{JSON.stringify(data.value, null, 2)}</pre>
+    </group>
+  </div>
+}
+
+@style {
+  .fetch-resource { font-family: monospace; padding: 1rem; }
+  .loading { color: var(--info, #036); }
+  .error { color: var(--error, #c00); }
+  .result { background: var(--code-bg, #f5f5f5); padding: 1rem; border-radius: 4px; overflow: auto; }
+}

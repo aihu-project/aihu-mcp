@@ -1,0 +1,56 @@
+<!-- @cookbook
+id: aihu-clock
+type: display
+granularity: block
+description: Real-time clock — onMount starts the interval, onDispose clears it; tick runs through an action.
+constructs: [state, action, onMount, onDispose, interpolation]
+packages: []
+concerns: [state]
+since: 0.5.0
+anti-patterns:
+  - "Do not start timers at @state top level — setup also runs during SSR; start them in onMount and always clear them in onDispose."
+related: [aihu-toast]
+-->
+// clock — real-time clock: onMount starts setInterval, onDispose clears it
+
+@state {
+  let hours = state('00')
+  let minutes = state('00')
+  let seconds = state('00')
+  let _timerId: number | null = null
+
+  const tick = action(() => {
+      const now = new Date()
+      hours = String(now.getHours()).padStart(2, '0')
+      minutes = String(now.getMinutes()).padStart(2, '0')
+      seconds = String(now.getSeconds()).padStart(2, '0')
+    })
+
+  onMount(() => {
+      tick()
+      _timerId = setInterval(() => tick(), 1000) as unknown as number
+    })
+  onDispose(() => {
+      if (_timerId !== null) {
+        clearInterval(_timerId)
+        _timerId = null
+      }
+    })
+}
+
+@template {
+  <div class="clock" role="timer" aria-live="off">
+    <span class="digit">{hours}</span>
+    <span class="sep">:</span>
+    <span class="digit">{minutes}</span>
+    <span class="sep">:</span>
+    <span class="digit seconds">{seconds}</span>
+  </div>
+}
+
+@style {
+  .clock { display: flex; align-items: center; gap: 0.1rem; font-size: 3rem; font-variant-numeric: tabular-nums; font-family: monospace; padding: 1rem; }
+  .digit { background: var(--digit-bg, #111); color: var(--digit-fg, #0f0); padding: 0.1em 0.2em; border-radius: 4px; min-width: 1.5ch; text-align: center; }
+  .sep { color: var(--muted, #888); padding: 0 0.05em; }
+  .seconds { color: var(--seconds-fg, #0af); }
+}

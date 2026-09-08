@@ -3,9 +3,9 @@
  * cookbook corpus (`cookbook/*.aihu`).
  *
  * Every consumption surface is GENERATED from the corpus through this module:
- *   - `packages/mcp/src/cookbook-index.json` (served by the `aihu_example` MCP tool)
+ *   - `src/cookbook-index.json` (served by the `aihu_example` MCP tool)
  *   - `llms-cookbook.txt` at the repo root (agent-consumable text export)
- *   - `apps/docs/playground/presets.generated.ts` (playground presets)
+ *   - optional playground output rendered for downstream consumers
  *
  * Doctrine (the `-1` bundle-size incident, restored in #510): generators must
  * FAIL LOUDLY on missing/invalid input — never emit vacuously. Every recipe
@@ -496,7 +496,7 @@ export function renderLlmsCookbook(entries: CookbookIndexEntry[]): string {
     '> Canonical, compiler-verified .aihu recipes — the fluency corpus for writing',
     '> idiomatic aihu components. Every recipe below compiles through the real aihu',
     '> compiler in CI (cookbook/harness.ts). Generated from cookbook/*.aihu by',
-    '> packages/mcp/scripts/build-cookbook-index.ts — do not edit by hand.',
+    '> scripts/build-cookbook-index.ts — do not edit by hand.',
     '',
     `> Recipes: ${entries.length}`,
     '',
@@ -528,7 +528,7 @@ export function renderLlmsCookbook(entries: CookbookIndexEntry[]): string {
   return `${parts.join('\n').trimEnd()}\n`
 }
 
-/** `apps/docs/playground/presets.generated.ts` — playground presets. */
+/** Render an optional playground representation for downstream consumers. */
 export function renderPresetsTs(entries: CookbookIndexEntry[]): string {
   const presets = entries.filter((e) => e.playground)
   const parts: string[] = [
@@ -537,7 +537,7 @@ export function renderPresetsTs(entries: CookbookIndexEntry[]): string {
     ' *',
     ' * Playground presets derived from the cookbook corpus: every recipe whose',
     ' * frontmatter carries a `playground:` label lands here. Regenerate with',
-    ' * `bun packages/mcp/scripts/build-cookbook-index.ts`; CI diffs this file',
+    ' * `bun scripts/build-cookbook-index.ts`; CI diffs the committed index and llms export',
     ' * against a fresh build (scripts/check-cookbook-index.ts).',
     ' */',
     '',

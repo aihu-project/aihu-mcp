@@ -1,0 +1,84 @@
+<!-- @cookbook
+id: infinite-scroll
+type: list
+granularity: block
+description: Infinite scroll — controller() wires an IntersectionObserver sentinel that calls the loadMore action; each/key/empty renders the list.
+constructs: [prop, state, action, controller, onMount, each, key, empty, group, if, interpolation]
+packages: []
+concerns: [state, events]
+since: 0.5.0
+anti-patterns:
+  - "Do not fire loadMore from the observer without checking loading — re-entrant calls double-append pages."
+related: [data-table, aihu-controller]
+-->
+// infinite-scroll — prop page + action loadMore, IntersectionObserver via controller()
+
+@state {
+  const page = prop({ default: 1 })
+
+  let loading = state(false)
+  let items = state<Array<{ id: number; text: string }>>([])
+
+  const loadMore = action(async () => {
+    if (loading) return
+    loading = true
+    await new Promise(resolve => setTimeout(resolve, 400))
+    const start = items.length
+    items = [
+      ...items,
+      ...Array.from({ length: 10 }, (_, i) => ({
+        id: start + i + 1,
+        text: `Item ${start + i + 1}`,
+      })),
+    ]
+    loading = false
+  })
+
+  const sentinel = controller(() => {
+    let observer: IntersectionObserver | null = null
+    return {
+      hostConnected: () => {
+        const el = (ctx.host as ShadowRoot).querySelector('.scroll-sentinel')
+        if (!el) return
+        observer = new IntersectionObserver((entries) => {
+          if (entries[0]?.isIntersecting && !loading) {
+            loadMore()
+          }
+        }, { threshold: 0.1 })
+        observer.observe(el)
+      },
+      hostDisconnected: () => {
+        observer?.disconnect()
+        observer = null
+      },
+    }
+  })
+
+  onMount(() => { loadMore() })
+}
+
+@template {
+  <div class="infinite-scroll">
+    <ul class="item-list">
+      <group each={item of items} key={item.id}>
+        <li class="scroll-item">{item.text}</li>
+      </group><group empty>
+        <li class="scroll-item empty">Loading initial items…</li>
+      </group>
+    </ul>
+    <group if={loading}>
+      <p class="loading-indicator">Loading more…</p>
+    </group>
+    <div class="scroll-sentinel" aria-hidden="true"></div>
+  </div>
+}
+
+@style {
+  .infinite-scroll { max-width: 24rem; max-height: 400px; overflow-y: auto; border: 1px solid var(--border, #ccc); border-radius: 6px; }
+  .item-list { list-style: none; padding: 0; margin: 0; }
+  .scroll-item { padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--border, #eee); font-size: 0.9rem; }
+  .scroll-item:last-child { border-bottom: none; }
+  .scroll-item.empty { color: var(--muted, #888); font-style: italic; }
+  .loading-indicator { padding: 0.5rem 0.75rem; font-size: 0.85rem; color: var(--muted, #888); text-align: center; }
+  .scroll-sentinel { height: 1px; }
+}

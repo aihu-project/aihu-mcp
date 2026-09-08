@@ -13,7 +13,7 @@ _(Hand-written prose lives in this block. Replace this placeholder; everything b
 ## Install
 
 <!-- BEGIN_AUTOGEN: install -->
-<!-- regenerate: bun scripts/sync-readme.ts (also runs in pre-commit + CI) -->
+<!-- regenerate package facts from package.json when release metadata changes -->
 
 ```bash
 npm install @aihu/mcp
@@ -61,7 +61,7 @@ bun add @aihu/mcp
 
 **Dependencies:**
 
-- `@aihu/compiler` — `^1.3.5`
+- `@aihu/compiler` — `^1.3.6`
 - `@modelcontextprotocol/sdk` — `^1.0.0`
 
 <sub><i>Auto-generated against `@aihu/mcp@0.2.0`.</i></sub>
@@ -73,10 +73,9 @@ bun add @aihu/mcp
 <!-- BEGIN_AUTOGEN: see-also -->
 <!-- regenerate: bun scripts/sync-readme.ts (also runs in pre-commit + CI) -->
 
-- [Cookbook corpus](../../cookbook)
-- [@aihu/agent](../agent)
-- [@aihu-plugin/agent-readiness](../plugin-agent-readiness)
-- [Aihu framework root](../../README.md)
+- [Cookbook corpus](./cookbook)
+- [Aihu compiler](https://github.com/aihu-project/aihu-compiler)
+- [Aihu organization](https://github.com/aihu-project)
 
 <sub><i>Auto-generated against `@aihu/mcp@0.2.0`.</i></sub>
 
@@ -87,7 +86,7 @@ bun add @aihu/mcp
 <!-- BEGIN_AUTOGEN: license -->
 <!-- regenerate: bun scripts/sync-readme.ts (also runs in pre-commit + CI) -->
 
-MIT — see [LICENSE](../../LICENSE).
+MIT — see [LICENSE](./LICENSE).
 
 <sub><i>Auto-generated against `@aihu/mcp@0.2.0`.</i></sub>
 

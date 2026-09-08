@@ -1,0 +1,26 @@
+{
+  "only": ["ts", "json", "md", "aihu", "txt"],
+  "exclude": ["dist", "node_modules", "coverage", ".git"],
+  "depth": 5,
+  "routing": {
+    "subsystems": {
+      "compiler-boundary": {
+        "paths": ["src/compiler.ts", "package.json", "tests/mcp.test.ts"],
+        "keywords": ["resolveCompilerBinary", "@aihu/compiler", "aihu-compile"],
+        "docs": ["README.md"],
+        "note": "The executable is a published-package contract, so Codemap cannot infer its runtime availability from a local source tree."
+      },
+      "cookbook-generated-artifacts": {
+        "paths": [
+          "cookbook",
+          "scripts/build-cookbook-index.ts",
+          "src/cookbook-index.json",
+          "llms-cookbook.txt"
+        ],
+        "keywords": ["GENERATED", "do not edit", "cookbook-index", "llms-cookbook"],
+        "docs": ["cookbook/README.md"],
+        "note": "The index and text export are generated from recipe files; the import graph cannot represent that filesystem generation edge."
+      }
+    }
+  }
+}

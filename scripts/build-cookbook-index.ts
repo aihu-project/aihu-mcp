@@ -3,39 +3,29 @@
  * `<!-- @cookbook -->` frontmatter schema (see cookbook-lib.ts), and writes
  * every generated consumption surface:
  *
- *   1. packages/mcp/src/cookbook-index.json   — the @aihu/mcp `aihu_example` index
- *   2. llms-cookbook.txt (repo root)          — agent-consumable text export
- *   3. apps/docs/playground/presets.generated.ts — playground presets. Both
- *      this generator and scripts/check-cookbook-index.ts own it, so it cannot
- *      fossilize: a hand-copied artifact with no generator edge and no CI edge
- *      is precisely the drift this script exists to prevent.
+ *   1. src/cookbook-index.json — the @aihu/mcp `aihu_example` index
+ *   2. llms-cookbook.txt — agent-consumable text export
  *
  * FAIL-LOUD CONTRACT (the `-1` bundle-size doctrine): any recipe with
  * missing/invalid frontmatter, an unknown construct/type/concern, a duplicate
  * id, or an empty scan result exits 1 and lists every offender. This script
  * NEVER writes partial or empty artifacts.
  *
- * Usage: bun packages/mcp/scripts/build-cookbook-index.ts
- * (also runs as part of `bun run build` in packages/mcp)
+ * Usage: bun scripts/build-cookbook-index.ts
+ * (also runs as part of `bun run build`)
  */
 
 import { writeFileSync } from 'node:fs'
-import { basename, dirname, join, relative, resolve } from 'node:path'
+import { basename, dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import {
-  buildCorpus,
-  renderIndexJson,
-  renderLlmsCookbook,
-  renderPresetsTs,
-} from './cookbook-lib.ts'
+import { buildCorpus, renderIndexJson, renderLlmsCookbook } from './cookbook-lib.ts'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const repoRoot = resolve(__dirname, '../../../')
+const repoRoot = resolve(__dirname, '..')
 
 const cookbookDir = join(repoRoot, 'cookbook')
-const indexPath = join(repoRoot, 'packages/mcp/src/cookbook-index.json')
+const indexPath = join(repoRoot, 'src/cookbook-index.json')
 const llmsPath = join(repoRoot, 'llms-cookbook.txt')
-const presetsPaths = [join(repoRoot, 'apps/docs/playground/presets.generated.ts')]
 
 const { entries, errors } = buildCorpus(cookbookDir)
 
@@ -44,7 +34,7 @@ if (errors.length > 0) {
   for (const err of errors) console.error(`  ✗ ${err}`)
   console.error(
     '\nEvery cookbook recipe must carry a valid <!-- @cookbook --> frontmatter block.' +
-      '\nSchema: packages/mcp/scripts/cookbook-lib.ts (header comment).',
+      '\nSchema: scripts/cookbook-lib.ts (header comment).',
   )
   process.exit(1)
 }
@@ -67,11 +57,3 @@ console.log(`[build-cookbook-index] Wrote ${entries.length} entries to ${basenam
 
 writeFileSync(llmsPath, renderLlmsCookbook(entries), 'utf-8')
 console.log(`[build-cookbook-index] Wrote ${entries.length} recipes to ${basename(llmsPath)}`)
-
-const presetsTs = renderPresetsTs(entries)
-for (const presetsPath of presetsPaths) {
-  writeFileSync(presetsPath, presetsTs, 'utf-8')
-  console.log(
-    `[build-cookbook-index] Wrote ${presetCount} playground presets to ${relative(repoRoot, presetsPath)}`,
-  )
-}
