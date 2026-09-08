@@ -2,9 +2,19 @@
 
 ## Unreleased
 
+<!-- Release notes for the next version go here. -->
+
+## 0.2.1
+
+### Patch Changes
+
 - Move the MCP server and compiler-backed cookbook into the standalone `aihu-mcp` repository.
 - Resolve `aihu-compile` exclusively through the published `@aihu/compiler` package.
 - Keep cookbook generation and validation self-contained in this repository.
+- Publish the standalone repository build with the generated cookbook index and the
+  published `@aihu/compiler` binary resolver.
+- Add tag-version validation and an idempotent npm release workflow gated by the
+  full MCP, cookbook, build, and package checks.
 
 ## 0.2.0
 
