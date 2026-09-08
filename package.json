@@ -1,6 +1,6 @@
 {
   "name": "@aihu/mcp",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",
@@ -26,6 +26,7 @@
     "build": "bun run generate:cookbook && rolldown -c",
     "generate:cookbook": "bun scripts/build-cookbook-index.ts",
     "check:cookbook": "bun run generate:cookbook && git diff --exit-code -- src/cookbook-index.json llms-cookbook.txt",
+    "check:release-version": "bun scripts/check-release-version.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --config vitest.config.ts",
     "test:cookbook": "bun run cookbook/harness.ts",

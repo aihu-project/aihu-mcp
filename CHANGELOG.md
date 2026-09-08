@@ -6,6 +6,15 @@
 - Resolve `aihu-compile` exclusively through the published `@aihu/compiler` package.
 - Keep cookbook generation and validation self-contained in this repository.
 
+## 0.2.1
+
+### Patch Changes
+
+- Publish the standalone repository build with the generated cookbook index and the
+  published `@aihu/compiler` binary resolver.
+- Add tag-version validation and an idempotent npm release workflow gated by the
+  full MCP, cookbook, build, and package checks.
+
 ## 0.2.0
 
 ### Minor Changes

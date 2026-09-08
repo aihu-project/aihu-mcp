@@ -21,7 +21,7 @@ npm install @aihu/mcp
 bun add @aihu/mcp
 ```
 
-<sub><i>Auto-generated against `@aihu/mcp@0.2.0`.</i></sub>
+<sub><i>Auto-generated against `@aihu/mcp@0.2.1`.</i></sub>
 
 <!-- END_AUTOGEN: install -->
 
@@ -32,12 +32,12 @@ bun add @aihu/mcp
 
 | | |
 |---|---|
-| **Version** | `0.2.0` |
+| **Version** | `0.2.1` |
 | **Tier** | C — Agent surface — MCP server (aihu_example cookbook retrieval + aihu_validate) |
 | **Published files** | 3 entries |
 | **License** | MIT |
 
-<sub><i>Auto-generated against `@aihu/mcp@0.2.0`.</i></sub>
+<sub><i>Auto-generated against `@aihu/mcp@0.2.1`.</i></sub>
 
 <!-- END_AUTOGEN: stats -->
 
@@ -50,7 +50,7 @@ bun add @aihu/mcp
 |---|---|---|
 | `.` | `./dist/index.js` | `—` |
 
-<sub><i>Auto-generated against `@aihu/mcp@0.2.0`.</i></sub>
+<sub><i>Auto-generated against `@aihu/mcp@0.2.1`.</i></sub>
 
 <!-- END_AUTOGEN: exports -->
 
@@ -64,7 +64,7 @@ bun add @aihu/mcp
 - `@aihu/compiler` — `^1.3.6`
 - `@modelcontextprotocol/sdk` — `^1.0.0`
 
-<sub><i>Auto-generated against `@aihu/mcp@0.2.0`.</i></sub>
+<sub><i>Auto-generated against `@aihu/mcp@0.2.1`.</i></sub>
 
 <!-- END_AUTOGEN: deps -->
 
@@ -77,7 +77,7 @@ bun add @aihu/mcp
 - [Aihu compiler](https://github.com/aihu-project/aihu-compiler)
 - [Aihu organization](https://github.com/aihu-project)
 
-<sub><i>Auto-generated against `@aihu/mcp@0.2.0`.</i></sub>
+<sub><i>Auto-generated against `@aihu/mcp@0.2.1`.</i></sub>
 
 <!-- END_AUTOGEN: see-also -->
 
@@ -88,6 +88,6 @@ bun add @aihu/mcp
 
 MIT — see [LICENSE](./LICENSE).
 
-<sub><i>Auto-generated against `@aihu/mcp@0.2.0`.</i></sub>
+<sub><i>Auto-generated against `@aihu/mcp@0.2.1`.</i></sub>
 
 <!-- END_AUTOGEN: license -->
