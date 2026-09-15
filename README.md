@@ -7,7 +7,36 @@ MCP server for aihu — exposes aihu_example and aihu_validate tools via stdio t
 > **Status:** Publish-ready — rides the next release cut. The `aihu_example` index is generated from the `cookbook/` corpus (`scripts/build-cookbook-index.ts`) and CI-guarded against staleness (`check:cookbook`).
 
 <!-- BEGIN_HANDWRITTEN: prose -->
-_(Hand-written prose lives in this block. Replace this placeholder; everything below is auto-generated.)_
+Exposes two tools over the [Model Context Protocol](https://modelcontextprotocol.io)'s
+stdio transport:
+
+- **`aihu_example`** — returns a canonical `.aihu` SFC snippet from the generated
+  cookbook index that best matches a natural-language `intent`, optionally
+  narrowed by keyword `tags`.
+- **`aihu_validate`** — compiles a `.aihu` SFC `source` string with the aihu Rust
+  compiler and returns either the compiled TypeScript or structured diagnostics
+  (code, message, line/col).
+
+## Usage
+
+Programmatic:
+
+```ts
+import { createServer, startServer } from '@aihu/mcp'
+
+await startServer()
+// or, to configure the transport yourself:
+const server = createServer()
+```
+
+CLI — this package ships a `serve` bin that starts the stdio server and runs
+until the host closes stdin:
+
+```bash
+npx serve
+# or, from an aihu project that depends on this package:
+aihu mcp serve
+```
 <!-- END_HANDWRITTEN: prose -->
 
 ## Install
